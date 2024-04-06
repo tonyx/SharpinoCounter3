@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateProgramFile>false</GenerateProgramFile>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="appSettings.json" CopyToOutputDirectory="PreserveNewest" />
+    <Compile Include="Counters/Counter.fs" />
+    <Compile Include="Counters/Events.fs" />
+    <Compile Include="Counters/Commands.fs" />
+    <Compile Include="CounterContext/CounterContext.fs" />
+    <Compile Include="CounterContext/Events.fs" />
+    <Compile Include="CounterContext/Commands.fs" />
+
+    <Compile Include="CounterApi.fs" />
+    <Compile Include="TestUtils.fs" />
+    <Compile Include="Tests.fs" />
+    <Compile Include="KafkaImplementationTests.fs" />
+    <Compile Include="TestRunner.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Expecto" Version="10.2.1" />
+    <PackageReference Include="Fable.Core" Version="4.3.0" />
+    <PackageReference Include="Farmer" Version="1.8.9" />
+    <PackageReference Include="FSharpPlus" Version="1.6.1" />
+    <PackageReference Include="FsPickler" Version="5.3.2" />
+    <PackageReference Include="FsPickler.Json" Version="5.3.2" />
+    <PackageReference Include="FsToolkit.ErrorHandling" Version="4.15.1" />
+    <PackageReference Include="Log4net" Version="2.0.17" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+
+    <!-- <PackageReference Include="Sharpino" Version="1.5.9" />
+    <PackageReference Include="Sharpino.Core" Version="1.1.2" /> -->
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\realsharpino\Sharpino\Sharpino.Lib\Sharpino.Lib.fsproj" />
+    <ProjectReference Include="..\..\realsharpino\Sharpino\Sharpino.Lib.Core\Sharpino.Lib.Core.fsproj" />
+  </ItemGroup>
+
+</Project>
