@@ -13,6 +13,8 @@ open sharpinoCounter.CounterContext
 [<Tests>]
 let kafkaImplementationTests =
 
+    // those commented tests are just a placeholder for future rewrite of kakfa part in the library
+
     let pgStorageKafkaBroker = KafkaBroker.getKafkaBroker ("localhost:9092", postgresEventStore)
 
     testList "samples" [
