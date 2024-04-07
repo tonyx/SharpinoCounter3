@@ -15,7 +15,7 @@ let tests =
     // make sure you properly setup postgres db using dbmate tool if you want to enable the first test line below
     let testConfigs = [
         // ((fun () -> SharpinoCounterApi (pgStorage, doNothingBroker, counterContextStorageStateViewer, counterAggregateStorageStateViewer)), pgStorage)
-        ((fun () -> SharpinoCounterApi (memoryStorage, doNothingBroker, counterContextMemoryStateViewer, counterAggregateMemoryStateViewer)), memoryStorage)
+        ((fun () -> SharpinoCounterApi (inMemoryEventStore, doNothingBroker, counterContextMemoryStateViewer, counterAggregateMemoryStateViewer)), inMemoryEventStore)
     ]
 
     testList "samples" [
@@ -27,7 +27,6 @@ let tests =
 
             // when
             let counterReferences = counterApi.AddCounter newCounterId
-            // assignOffSet counterReferences
 
             // then
             Expect.isOk counterReferences  "should be ok"
@@ -72,7 +71,6 @@ let tests =
             let incrementCounter = counterApi.Increment newCounterId 
 
             // then
-
             let counterRetrieved = counterApi.GetCounter newCounterId
             Expect.isOk counterRetrieved "should be ok"
             let counter = counterRetrieved.OkValue
@@ -194,14 +192,12 @@ let tests =
                 [1 .. 3]
                 |> List.traverseResultM (fun _ -> counterApi.Increment (List.item 3 ids))
             Expect.isOk incrementThreeTimes "should be ok"
-            let okValue = incrementThreeTimes |> Result.get
 
             let incrementTenTimes =
                 [1 .. 10]
                 |> List.traverseResultM (fun _ -> counterApi.Increment (List.item 4 ids))
 
             Expect.isOk incrementTenTimes "should be ok"
-            let okValue = incrementTenTimes |> Result.get
 
             // then
             

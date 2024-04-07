@@ -25,8 +25,8 @@ let connection =
     "User Id=safe;"+
     "Password=safe;"
 
-let memoryStorage: IEventStore = MemoryStorage()
-let pgStorage = PgEventStore(connection)
+let inMemoryEventStore: IEventStore = MemoryStorage()
+let postgresEventStore = PgEventStore(connection)
 
 let doNothingBroker =
     { 
@@ -35,16 +35,16 @@ let doNothingBroker =
     }
 
 let counterContextStorageStateViewer =
-    getStorageFreshStateViewer<CounterContext, CounterCountextEvents> pgStorage
+    getStorageFreshStateViewer<CounterContext, CounterCountextEvents> postgresEventStore
 
 let counterAggregateStorageStateViewer =
-    getAggregateStorageFreshStateViewer<Counter, CounterEvents> pgStorage
+    getAggregateStorageFreshStateViewer<Counter, CounterEvents> postgresEventStore
 
 let counterContextMemoryStateViewer =
-    getStorageFreshStateViewer<CounterContext, CounterCountextEvents> memoryStorage
+    getStorageFreshStateViewer<CounterContext, CounterCountextEvents> inMemoryEventStore
 
 let counterAggregateMemoryStateViewer =
-    getAggregateStorageFreshStateViewer<Counter, CounterEvents> memoryStorage
+    getAggregateStorageFreshStateViewer<Counter, CounterEvents> inMemoryEventStore
 let counterSubscriber = 
     let result =
         try
