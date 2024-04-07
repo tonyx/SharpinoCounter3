@@ -23,7 +23,7 @@ module Counter =
         member this.Increment () =
             result 
                 {
-                    let! mustBeLowerThan99 =
+                    do! 
                         this.State < 99
                         |> Result.ofBool "must be lower than 99"
                     return Counter (this.Id, this.State + 1)
@@ -32,7 +32,7 @@ module Counter =
         member this.Decrement () =
             result
                 {
-                    let! mustBeGreaterThan0 = 
+                    do!
                         this.State > 0
                         |> Result.ofBool "must be greater than 0"
                     return Counter (this.Id, this.State - 1)

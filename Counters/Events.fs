@@ -12,6 +12,7 @@ open sharpinoCounter.Counter
 type IntOrUnit =
     | Int of int
     | Unit
+
 type CounterEvents =
     | Cleared of IntOrUnit 
     | Incremented 

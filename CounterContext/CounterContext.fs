@@ -15,7 +15,7 @@ module CounterContext =
 
         member this.AddCounter (counterId: Guid) = 
             result {
-                let! shouldNotalreadyExist = 
+                do! 
                     counterRefs |> List.exists (fun x -> x = counterId)
                     |> not
                     |> Result.ofBool "counter already exists"
@@ -23,7 +23,7 @@ module CounterContext =
             }
         member this.RemoveCounter (counterId: Guid) =
             result {
-                let! mustExist = 
+                do! 
                     counterRefs |> List.exists (fun x -> x = counterId)
                     |> Result.ofBool "counter does not exist"
                 return CounterContext (state, counterRefs |> List.filter (fun x -> x <> counterId))
