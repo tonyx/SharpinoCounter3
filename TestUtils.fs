@@ -40,6 +40,11 @@ let counterContextStorageStateViewer =
 let counterAggregateStorageStateViewer =
     getAggregateStorageFreshStateViewer<Counter, CounterEvents> pgStorage
 
+let counterContextMemoryStateViewer =
+    getStorageFreshStateViewer<CounterContext, CounterCountextEvents> memoryStorage
+
+let counterAggregateMemoryStateViewer =
+    getAggregateStorageFreshStateViewer<Counter, CounterEvents> memoryStorage
 let counterSubscriber = 
     let result =
         try

@@ -2,14 +2,7 @@ namespace sharpinoCounter
 open System
 open FSharpPlus
 open FsToolkit.ErrorHandling
-open Sharpino.Definitions
-open Sharpino.Utils
-open Sharpino
-open Sharpino.Core
-open Sharpino.Utils
 open Sharpino.CommandHandler
-open Sharpino.StateView
-open Sharpino.Definitions
 
 open Sharpino.Storage
 open sharpinoCounter.CounterContext
