@@ -9,14 +9,18 @@ open Sharpino
 open Sharpino.Core
 open sharpinoCounter.Counter
 
+type IntOrUnit =
+    | Int of int
+    | Unit
 type CounterEvents =
-    | Cleared 
+    | Cleared of IntOrUnit 
     | Incremented 
     | Decremented 
         interface Event<Counter> with
             member this.Process (counter: Counter) =
                 match this with
-                | Cleared  -> counter.Clear ()
+                | Cleared Unit -> counter.Clear ()
+                | Cleared (Int x)  -> counter.Clear x
                 | Incremented  -> counter.Increment ()
                 | Decremented  -> counter.Decrement ()
         static member Deserialize (serializer: ISerializer, json: Json) =

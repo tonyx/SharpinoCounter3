@@ -221,5 +221,99 @@ let tests =
             Expect.equal counter3.OkValue.State 3 "should be 3"
             Expect.equal counter4.OkValue.State 10 "should be 10"
 
+        multipleTestCase "add and remove a counter - Ok" testConfigs <| fun (api, eventStore) ->
+            Setup eventStore
+            // given
+            let newCounterId = Guid.NewGuid ()
+            let counterApi = api ()
+            let _ = counterApi.AddCounter newCounterId
+            let retrieved = counterApi.GetCounterReferences ()
+            Expect.isOk retrieved "should be ok"
+            Expect.equal retrieved.OkValue [newCounterId] "should be equal"
+
+            // when
+            let removeCounter = counterApi.RemoveCounter newCounterId
+            // 
+            Expect.isOk removeCounter "should be ok"
+            let counters = counterApi.GetCounterReferences ()
+            Expect.isOk counters "should be ok"
+            Expect.equal counters.OkValue [] "should be empty"
+
+        multipleTestCase "add twice the counter a counter with the same id - Error" testConfigs <| fun (api, eventStore) ->
+            Setup eventStore
+            // given
+            let newCounterId = Guid.NewGuid ()  
+            let counterApi = api ()
+            let added = counterApi.AddCounter newCounterId
+            Expect.isOk added "should be ok"
+
+            // when
+            let readded = counterApi.AddCounter newCounterId
+
+            // then
+            Expect.isError readded "should be error"
+            let (Error e)  = readded
+            printf "%A" e   
+
+
+        multipleTestCase "add a counter, remove it, and readd it - Ok" testConfigs <| fun (api, eventStore) ->
+            Setup eventStore
+
+            // given
+            let newCounterId = Guid.NewGuid ()
+            let counterApi = api ()
+            let added = counterApi.AddCounter newCounterId
+            Expect.isOk added "should be ok"
+            let removed = counterApi.RemoveCounter newCounterId
+            Expect.isOk removed "should be ok"
+
+            // when
+            let readded = counterApi.AddCounter newCounterId
+
+            // then
+            Expect.isOk readded "should be ok"
+            let retrieved = counterApi.GetCounterReferences ()
+            Expect.isOk retrieved "should be ok"
+            Expect.equal retrieved.OkValue [newCounterId] "should be equal"
+
+        multipleTestCase "add a counter, increase it and then clear it to zero - Ok" testConfigs <| fun (api, eventStore) ->
+            Setup eventStore
+
+            // given
+            let newCounterId = Guid.NewGuid ()
+            let counterApi = api ()
+            let added = counterApi.AddCounter newCounterId
+            Expect.isOk added "should be ok"
+            let incremented = counterApi.Increment newCounterId
+            Expect.isOk incremented "should be ok"
+
+            // when
+            let reset = counterApi.ClearCounter newCounterId
+
+            // then
+            Expect.isOk reset "should be ok"
+            let retrieved = counterApi.GetCounter newCounterId
+            Expect.isOk retrieved "should be ok"
+            Expect.equal retrieved.OkValue.State 0 "should be equal"
+
+        multipleTestCase "add a counter, increase it and then clear it to a value - Ok" testConfigs <| fun (api, eventStore) ->
+            Setup eventStore
+
+            // given
+            let newCounterId = Guid.NewGuid ()
+            let counterApi = api ()
+            let added = counterApi.AddCounter newCounterId
+            Expect.isOk added "should be ok"
+            let incremented = counterApi.Increment newCounterId
+            Expect.isOk incremented "should be ok"
+
+            // when
+            let reset = counterApi.ClearCounter (newCounterId, 10)
+
+            // then
+            Expect.isOk reset "should be ok"
+            let retrieved = counterApi.GetCounter newCounterId
+            Expect.isOk retrieved "should be ok"
+            Expect.equal retrieved.OkValue.State 10 "should be equal"
     ] 
     |> testSequenced

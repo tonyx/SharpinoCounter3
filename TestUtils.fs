@@ -40,7 +40,6 @@ let counterContextStorageStateViewer =
 let counterAggregateStorageStateViewer =
     getAggregateStorageFreshStateViewer<Counter, CounterEvents> pgStorage
 
-// let counterSubscriber = KafkaSubscriber.Create("localhost:9092", "_01", "_counter", "sharpinoClient") |> Result.get
 let counterSubscriber = 
     let result =
         try
@@ -63,6 +62,8 @@ let getKafkaCounterContextState () =
 let Setup(eventStore: IEventStore) =
     StateCache<CounterContext>.Instance.Clear()
     eventStore.Reset CounterContext.Version CounterContext.StorageName
+    eventStore.Reset Counter.Version Counter.StorageName
+    eventStore.ResetAggregateStream Counter.Version Counter.StorageName
     ApplicationInstance.ApplicationInstance.Instance.ResetGuid()
 
 let doNothing whatever =

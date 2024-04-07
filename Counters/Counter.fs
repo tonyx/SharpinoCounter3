@@ -13,6 +13,7 @@ module Counter =
     type Counter(id: Guid, value: int) =
         let stateId = Guid.NewGuid()
         member this.Clear () = Counter (this.Id, 0) |> Ok
+        member this.Clear value  = Counter (this.Id, value) |> Ok
 
         member this.Id = id
         member this.StateId = stateId

@@ -46,6 +46,22 @@ module SharpinoCounterApi =
             CounterCommands.Decrement 
             |> this.RunAggregateCommand counterId
 
+        member this.ClearCounter counterId =
+            CounterCommands.Clear Unit
+            |> this.RunAggregateCommand counterId
+
+        member this.ClearCounter (counterId,  x) =
+            CounterCommands.Clear (IntOrUnit.Int x)
+            |> this.RunAggregateCommand counterId
+
+        member this.RemoveCounter counterId =
+            result {
+                let removeCounterReference = RemoveCounterReference counterId
+                let! result = 
+                    this.RunCounterContextCommand removeCounterReference
+                return result
+            }
+
         member private this.RunInitAndCommand counter cmd =
             cmd
             |> runInitAndCommand<CounterContext, CounterCountextEvents, Counter> storage eventBroker counterContextStateViewer counter

@@ -10,15 +10,15 @@ open Sharpino.Core
 open sharpinoCounter.Counter
 
 type CounterCommands =
-    | Clear 
+    | Clear of IntOrUnit
     | Increment 
     | Decrement 
         interface Command<Counter, CounterEvents> with
             member this.Execute (counter: Counter):  Result<List<CounterEvents>, string> =
                 match this with
-                | Clear  -> 
-                    counter.Clear ()
-                    |> Result.map (fun _ -> [Cleared])
+                | Clear x -> 
+                    counter.Clear () 
+                    |> Result.map (fun _ -> [Cleared x] )
                 | Increment  ->
                     counter.Increment ()
                     |> Result.map (fun _ -> [Incremented])
