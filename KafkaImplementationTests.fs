@@ -5,10 +5,10 @@ open System
 open Sharpino
 open Sharpino.Utils
 open Expecto
-open sharpinoCounter.SharpinoCounterApi
+open SharpinoCounter.SharpinoCounterApi
 
 open TestUtils
-open sharpinoCounter.CounterContext
+open SharpinoCounter.CounterContext
 
 [<Tests>]
 let kafkaImplementationTests =

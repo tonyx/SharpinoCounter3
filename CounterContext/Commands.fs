@@ -1,5 +1,5 @@
 
-namespace sharpinoCounter
+namespace SharpinoCounter
 open System
 open FSharpPlus
 open FsToolkit.ErrorHandling
@@ -7,8 +7,8 @@ open Sharpino.Definitions
 open Sharpino.Utils
 open Sharpino
 open Sharpino.Core
-open sharpinoCounter.CounterContext
-open sharpinoCounter.CounterContextEvents
+open SharpinoCounter.CounterContext
+open SharpinoCounter.CounterContextEvents
 
 module CounterContextCommands =
     type CounterContextCommands =

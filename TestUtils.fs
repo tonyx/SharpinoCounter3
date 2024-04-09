@@ -4,10 +4,10 @@ open System
 open Sharpino
 open FSharpPlus
 
-open sharpinoCounter
-open sharpinoCounter.SharpinoCounterApi
+open SharpinoCounter
+open SharpinoCounter.SharpinoCounterApi
 open Sharpino.Cache
-open sharpinoCounter.CounterContext
+open SharpinoCounter.CounterContext
 open Sharpino
 open Sharpino.MemoryStorage
 open Sharpino.PgStorage
@@ -15,9 +15,9 @@ open Sharpino.TestUtils
 open Sharpino.Storage
 
 open Sharpino.CommandHandler
-open sharpinoCounter.CounterContextEvents
+open SharpinoCounter.CounterContextEvents
 open Sharpino.KafkaReceiver
-open sharpinoCounter.Counter
+open SharpinoCounter.Counter
 
 let connection = 
     "Server=127.0.0.1;"+

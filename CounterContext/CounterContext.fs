@@ -1,5 +1,5 @@
 ﻿
-namespace sharpinoCounter
+namespace SharpinoCounter
 open System
 open Sharpino
 open FSharpPlus

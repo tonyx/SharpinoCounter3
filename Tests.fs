@@ -5,7 +5,7 @@ open Sharpino
 open FSharpPlus
 open FsToolkit.ErrorHandling
 open Expecto
-open sharpinoCounter.SharpinoCounterApi
+open SharpinoCounter.SharpinoCounterApi
 open Sharpino.TestUtils
 open TestUtils
 

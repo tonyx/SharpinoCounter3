@@ -1,5 +1,5 @@
 
-namespace sharpinoCounter
+namespace SharpinoCounter
 open System
 open FSharpPlus
 open FsToolkit.ErrorHandling
@@ -7,7 +7,7 @@ open Sharpino.Definitions
 open Sharpino.Utils
 open Sharpino
 open Sharpino.Core
-open sharpinoCounter.Counter
+open SharpinoCounter.Counter
 
 type CounterCommands =
     | Clear of IntOrUnit

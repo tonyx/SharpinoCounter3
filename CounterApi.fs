@@ -1,26 +1,23 @@
-namespace sharpinoCounter
-open System
-open FSharpPlus
+namespace SharpinoCounter
 open FsToolkit.ErrorHandling
 open Sharpino.CommandHandler
 
 open Sharpino.Storage
-open sharpinoCounter.CounterContext
-open sharpinoCounter.CounterContextEvents
-open sharpinoCounter.CounterContextCommands
+open SharpinoCounter.CounterContext
+open SharpinoCounter.CounterContextEvents
+open SharpinoCounter.CounterContextCommands
+open SharpinoCounter.Counter
 
 module SharpinoCounterApi =
-    open Counter
 
     type SharpinoCounterApi (storage: IEventStore, eventBroker: IEventBroker, counterContextStateViewer: StateViewer<CounterContext>, counterViewer: AggregateViewer<Counter>) =
 
         member this.AddCounter counterId =
+            let counter = Counter (counterId, 0)
             result {
-                let counter = Counter (counterId, 0)
-                let addCounterReference = AddCounterReference counterId
-                let! result = 
-                    this.RunInitAndCommand counter addCounterReference
-                return result
+                return!  
+                    AddCounterReference counterId
+                    |> this.RunInitAndCommand counter 
             }
 
         member this.GetCounter counterId =
@@ -32,28 +29,28 @@ module SharpinoCounterApi =
             |> Result.map (fun (_, state, _, _) -> state.CountersReferences)
 
         member this.Increment counterId =
-            CounterCommands.Increment 
+            Increment 
             |> this.RunAggregateCommand counterId
 
         member this.Decrement counterId =
-            CounterCommands.Decrement 
+            Decrement 
             |> this.RunAggregateCommand counterId
 
         member this.ClearCounter counterId =
-            CounterCommands.Clear Unit
+            Clear Unit
             |> this.RunAggregateCommand counterId
 
         member this.ClearCounter (counterId,  x) =
-            CounterCommands.Clear (IntOrUnit.Int x)
+            Clear (Int x)
             |> this.RunAggregateCommand counterId
 
         member this.RemoveCounter counterId =
             result {
-                let removeCounterReference = RemoveCounterReference counterId
-                let! result = 
-                    this.RunCounterContextCommand removeCounterReference
-                return result
+                return! 
+                    RemoveCounterReference counterId
+                    |> this.RunCounterContextCommand
             }
+
 
         member private this.RunInitAndCommand counter cmd =
             cmd
