@@ -19,7 +19,7 @@ let tests =
     ]
 
     testList "samples" [
-        multipleTestCase "add a counter reference  - Ok" testConfigs <| fun (api, eventStore) ->
+        fmultipleTestCase "add a counter reference  - Ok" testConfigs <| fun (api, eventStore) ->
             Setup eventStore
             // given
             let newCounterId = Guid.NewGuid ()
