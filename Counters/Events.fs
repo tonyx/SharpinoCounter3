@@ -3,6 +3,7 @@ namespace SharpinoCounter
 open System
 open FSharpPlus
 open FsToolkit.ErrorHandling
+open Counters.Commons
 open Sharpino.Definitions
 open Sharpino.Utils
 open Sharpino
@@ -24,9 +25,8 @@ type CounterEvents =
                 | Cleared (Int x)  -> counter.Clear x
                 | Incremented  -> counter.Increment ()
                 | Decremented  -> counter.Decrement ()
-        static member Deserialize (serializer: ISerializer, json: Json) =
-            serializer.Deserialize<CounterEvents>(json)    
-        member this.Serialize (serializer: ISerializer) =
-            this
-            |> serializer.Serialize
+        static member Deserialize (json: Json) =
+            globalSerializer.Deserialize<CounterEvents> json
+        member this.Serialize  =
+            this |> globalSerializer.Serialize
 

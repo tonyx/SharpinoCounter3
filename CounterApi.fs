@@ -10,7 +10,7 @@ open SharpinoCounter.Counter
 
 module SharpinoCounterApi =
 
-    type SharpinoCounterApi (storage: IEventStore, eventBroker: IEventBroker, counterContextStateViewer: StateViewer<CounterContext>, counterViewer: AggregateViewer<Counter>) =
+    type SharpinoCounterApi (storage: IEventStore<string>, eventBroker: IEventBroker<string>, counterContextStateViewer: StateViewer<CounterContext>, counterViewer: AggregateViewer<Counter>) =
 
         member this.AddCounter counterId =
             let counter = Counter (counterId, 0)
@@ -22,11 +22,11 @@ module SharpinoCounterApi =
 
         member this.GetCounter counterId =
             counterViewer counterId
-            |> Result.map (fun (_, counter, _, _) -> counter)
+            |> Result.map (fun (_, counter) -> counter)
 
         member this.GetCounterReferences () =
             counterContextStateViewer ()
-            |> Result.map (fun (_, state, _, _) -> state.CountersReferences)
+            |> Result.map (fun (_, state) -> state.CountersReferences)
 
         member this.Increment counterId =
             Increment 
@@ -54,12 +54,12 @@ module SharpinoCounterApi =
 
         member private this.RunInitAndCommand counter cmd =
             cmd
-            |> runInitAndCommand<CounterContext, CounterCountextEvents, Counter> storage eventBroker counterContextStateViewer counter
+            |> runInitAndCommand<CounterContext, CounterCountextEvents, Counter, string> storage eventBroker counter
 
         member private this.RunAggregateCommand counterId cmd =
             cmd
-            |> runAggregateCommand<Counter, CounterEvents> counterId storage eventBroker counterViewer
+            |> runAggregateCommand<Counter, CounterEvents, string> counterId storage eventBroker
 
         member private this.RunCounterContextCommand cmd =
             cmd 
-            |> runCommand<CounterContext, CounterCountextEvents> storage eventBroker counterContextStateViewer
+            |> runCommand<CounterContext, CounterCountextEvents, string> storage eventBroker 

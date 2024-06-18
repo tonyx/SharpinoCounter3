@@ -19,7 +19,7 @@ let tests =
     ]
 
     testList "samples" [
-        fmultipleTestCase "add a counter reference  - Ok" testConfigs <| fun (api, eventStore) ->
+        multipleTestCase "add a counter reference  - Ok" testConfigs <| fun (api, eventStore) ->
             Setup eventStore
             // given
             let newCounterId = Guid.NewGuid ()
@@ -250,8 +250,6 @@ let tests =
 
             // then
             Expect.isError readded "should be error"
-            let (Error e)  = readded
-            printf "%A" e   
 
 
         multipleTestCase "add a counter, remove it, and readd it - Ok" testConfigs <| fun (api, eventStore) ->

@@ -1,6 +1,7 @@
 
 namespace SharpinoCounter
 open System
+open Counters.Commons
 open FSharpPlus
 open FsToolkit.ErrorHandling
 open Sharpino.Definitions
@@ -21,9 +22,10 @@ module CounterContextEvents =
                     | CounterRemoved id -> counter.RemoveCounter id
 
 // ---
-        static member Deserialize (serializer: ISerializer, json: Json) =
-            serializer.Deserialize<CounterCountextEvents>(json)
-        member this.Serialize (serializer: ISerializer) =
+        static member Deserialize (json: Json) =
+            globalSerializer.Deserialize<CounterCountextEvents> json
+
+        member this.Serialize =
             this
-            |> serializer.Serialize
+            |> globalSerializer.Serialize
 

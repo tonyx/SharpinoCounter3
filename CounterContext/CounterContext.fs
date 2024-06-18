@@ -2,6 +2,7 @@
 namespace SharpinoCounter
 open System
 open Sharpino
+open Counters.Commons
 open FSharpPlus
 open FsToolkit.ErrorHandling
 open Sharpino.Definitions
@@ -38,8 +39,8 @@ module CounterContext =
         static member Version = "_01"
         static member SnapshotsInterval = 15
         static member Lock = new Object ()
-        static member Deserialize (serializer: ISerializer, json: Json) =
-            serializer.Deserialize<CounterContext> json 
+        static member Deserialize (json: Json) =
+            globalSerializer.Deserialize<CounterContext> json 
 
-        member this.Serialize (serializer: ISerializer) =
-            serializer.Serialize(this)
+        member this.Serialize =
+            globalSerializer.Serialize this
