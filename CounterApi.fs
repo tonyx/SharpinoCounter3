@@ -7,10 +7,27 @@ open SharpinoCounter.CounterContext
 open SharpinoCounter.CounterContextEvents
 open SharpinoCounter.CounterContextCommands
 open SharpinoCounter.Counter
+open Sharpino.MemoryStorage
 
 module SharpinoCounterApi =
+    open Sharpino
+
+    let doNothingBroker =
+        { 
+            notify = None
+            notifyAggregate = None
+        }
+
+    let inMemoryEventStore: IEventStore<string> = MemoryStorage()
+    let counterContextMemoryStateViewer =
+        getStorageFreshStateViewer<CounterContext, CounterCountextEvents,string> inMemoryEventStore
+
+    let counterAggregateMemoryStateViewer =
+        getAggregateStorageFreshStateViewer<Counter, CounterEvents, string> inMemoryEventStore
 
     type SharpinoCounterApi (storage: IEventStore<string>, eventBroker: IEventBroker<string>, counterContextStateViewer: StateViewer<CounterContext>, counterViewer: AggregateViewer<Counter>) =
+
+        new () = SharpinoCounterApi(inMemoryEventStore, doNothingBroker, counterContextMemoryStateViewer, counterAggregateMemoryStateViewer)
 
         member this.AddCounter counterId =
             let counter = Counter (counterId, 0)

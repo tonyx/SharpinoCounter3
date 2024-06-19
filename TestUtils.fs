@@ -45,6 +45,8 @@ let counterContextMemoryStateViewer =
 
 let counterAggregateMemoryStateViewer =
     getAggregateStorageFreshStateViewer<Counter, CounterEvents, string> inMemoryEventStore
+
+
 // let counterSubscriber = 
 //     let result =
 //         try
