@@ -22,31 +22,59 @@ module SharpinoCounterApi =
             }
 
         member this.GetCounter counterId =
-            counterViewer counterId
-            |> Result.map (fun (_, counter) -> counter)
+            result {
+                let! (_, counterContext) = counterContextStateViewer ()
+                let! counterExists = counterContext.GetCounterReference counterId
+                let! (_, counter)  =  counterViewer counterId
+                return counter
+            }
 
         member this.GetCounterReferences () =
-            counterContextStateViewer ()
-            |> Result.map (fun (_, state) -> state.CountersReferences)
+            result {
+                let! (_, counterContext) = counterContextStateViewer ()
+                return counterContext.CountersReferences
+            }
 
         member this.Increment counterId =
-            Increment
-            |> runAggregateCommand<Counter, CounterEvents, string> counterId storage eventBroker 
+            result {
+                let! (_, counterContext)  = counterContextStateViewer ()
+                let counterExists = counterContext.GetCounterReference counterId
+                return!
+                    Increment
+                    |> runAggregateCommand<Counter, CounterEvents, string> counterId storage eventBroker
+            }
 
         member this.Decrement counterId =
-            Decrement 
-            |> this.RunAggregateCommand counterId
+            result {
+                let! (_, counterContext) = counterContextStateViewer ()
+                let! counterExists = counterContext.GetCounterReference counterId
+                return!
+                    Decrement
+                    |> runAggregateCommand<Counter, CounterEvents, string> counterId storage eventBroker
+            }
 
         member this.ClearCounter counterId =
-            Clear Unit
-            |> this.RunAggregateCommand counterId
+            result {
+                let! (_, counterContext) = counterContextStateViewer ()
+                let! counterExists = counterContext.GetCounterReference counterId
+                return!    
+                    Clear Unit
+                    |> this.RunAggregateCommand counterId
+            }
 
-        member this.ClearCounter (counterId,  x) =
-            Clear (Int x)
-            |> this.RunAggregateCommand counterId
+        member this.ClearCounter (counterId, x) =
+            result {
+                let! (_, counterContext) = counterContextStateViewer ()
+                let! counterExists = counterContext.GetCounterReference counterId
+                return!
+                    Clear (Int x)
+                    |> this.RunAggregateCommand counterId
+            }
 
         member this.RemoveCounter counterId =
             result {
+                let! (_, counterContext) = counterContextStateViewer ()
+                let! counterExists = counterContext.GetCounterReference counterId
                 return! 
                     RemoveCounterReference counterId
                     |> this.RunCounterContextCommand

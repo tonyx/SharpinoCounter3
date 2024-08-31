@@ -18,9 +18,9 @@ module CounterContextCommands =
                 member this.Execute (counter: CounterContext) =
                     match this with
                     | AddCounterReference id ->
-                        counter.AddCounter id
+                        counter.AddCounterReference id
                         |> Result.map (fun s -> (s, [CounterAdded id]))
                     | RemoveCounterReference id ->
-                        counter.RemoveCounter id
+                        counter.RemoveCounterReference id
                         |> Result.map (fun s -> (s,[CounterRemoved id]))
                 member this.Undoer = None

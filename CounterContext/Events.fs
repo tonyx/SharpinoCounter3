@@ -18,8 +18,8 @@ module CounterContextEvents =
             interface Event<CounterContext> with
                 member this.Process (counter: CounterContext) =
                     match this with
-                    | CounterAdded id -> counter.AddCounter id
-                    | CounterRemoved id -> counter.RemoveCounter id
+                    | CounterAdded id -> counter.AddCounterReference id
+                    | CounterRemoved id -> counter.RemoveCounterReference id
 
 // ---
         static member Deserialize (json: Json) =
