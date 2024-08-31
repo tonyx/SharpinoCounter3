@@ -13,16 +13,19 @@ type CounterCommands =
     | Clear of IntOrUnit
     | Increment 
     | Decrement 
-        interface Command<Counter, CounterEvents> with
-            member this.Execute (counter: Counter):  Result<List<CounterEvents>, string> =
+        interface AggregateCommand<Counter, CounterEvents> with
+            member this.Execute (counter: Counter):  Result<Counter*List<CounterEvents>, string> =
                 match this with
-                | Clear x -> 
+                | Clear Unit -> 
                     counter.Clear () 
-                    |> Result.map (fun _ -> [Cleared x] )
+                    |> Result.map (fun s -> (s, [Cleared Unit]))
+                | Clear (Int x) ->
+                    counter.Clear x
+                    |> Result.map (fun s -> (s, [Cleared (Int x)]))
                 | Increment  ->
                     counter.Increment ()
-                    |> Result.map (fun _ -> [Incremented])
+                    |> Result.map (fun s -> (s, [Incremented]))
                 | Decrement  ->
                     counter.Decrement()
-                    |> Result.map (fun _ -> [Decremented])
+                    |> Result.map (fun s -> (s, [Decremented]))
             member this.Undoer = None

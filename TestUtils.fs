@@ -25,7 +25,7 @@ let connection =
     "User Id=safe;"+
     "Password=safe;"
 
-let inMemoryEventStore: IEventStore = MemoryStorage()
+let inMemoryEventStore: IEventStore<string> = MemoryStorage()
 let postgresEventStore = PgEventStore(connection)
 
 let doNothingBroker =
@@ -35,16 +35,17 @@ let doNothingBroker =
     }
 
 let counterContextStorageStateViewer =
-    getStorageFreshStateViewer<CounterContext, CounterCountextEvents> postgresEventStore
+    getStorageFreshStateViewer<CounterContext, CounterCountextEvents, string> postgresEventStore
 
 let counterAggregateStorageStateViewer =
-    getAggregateStorageFreshStateViewer<Counter, CounterEvents> postgresEventStore
+    getAggregateStorageFreshStateViewer<Counter, CounterEvents, string> postgresEventStore
 
 let counterContextMemoryStateViewer =
-    getStorageFreshStateViewer<CounterContext, CounterCountextEvents> inMemoryEventStore
+    getStorageFreshStateViewer<CounterContext, CounterCountextEvents, string> inMemoryEventStore
 
 let counterAggregateMemoryStateViewer =
-    getAggregateStorageFreshStateViewer<Counter, CounterEvents> inMemoryEventStore
+    getAggregateStorageFreshStateViewer<Counter, CounterEvents, string> inMemoryEventStore
+
 
 // let counterSubscriber = 
 //     let result =
@@ -65,8 +66,9 @@ let counterAggregateMemoryStateViewer =
 //             counterViewer.State()
 //     counterState
 
-let Setup(eventStore: IEventStore) =
+let Setup(eventStore: IEventStore<string>) =
     StateCache<CounterContext>.Instance.Clear()
+    AggregateCache<Counter, string >.Instance.Clear()
     eventStore.Reset CounterContext.Version CounterContext.StorageName
     eventStore.Reset Counter.Version Counter.StorageName
     eventStore.ResetAggregateStream Counter.Version Counter.StorageName

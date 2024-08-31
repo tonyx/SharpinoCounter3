@@ -1,5 +1,6 @@
 
 namespace SharpinoCounter
+open SharpinoCounter.Commons
 open System
 open Sharpino
 open FSharpPlus
@@ -11,12 +12,10 @@ module Counter =
     open Sharpino.Core
     open Sharpino.Lib.Core.Commons
     type Counter(id: Guid, value: int) =
-        let stateId = Guid.NewGuid()
         member this.Clear () = Counter (this.Id, 0) |> Ok
         member this.Clear value  = Counter (this.Id, value) |> Ok
 
         member this.Id = id
-        member this.StateId = stateId
 
         member this.State = value
 
@@ -38,23 +37,21 @@ module Counter =
                     return Counter (this.Id, this.State - 1)
                 }
 
-        member this.Serialize (serializer: ISerializer) =
+        member this.Serialize  =
             this
-            |> serializer.Serialize
-        static member Deserialize (serializer: ISerializer, json: Json) =
+            |> globalSerializer.Serialize
+        static member Deserialize (json: Json) =
             json 
-            |> serializer.Deserialize<Counter>
+            |> globalSerializer.Deserialize<Counter>
 
         static member Version = "_01"
         static member StorageName = "_counter"
         static member SnapshotsInterval = 15
 
-        interface Aggregate with
-            member this.StateId = stateId
+        interface Aggregate<string> with
             member this.Id = this.Id
-            member this.Serialize serializer =
-                this.Serialize serializer
-            member this.Lock = this
+            member this.Serialize  =
+                this.Serialize 
 
         interface Entity with
             member this.Id = this.Id

@@ -15,12 +15,12 @@ module CounterContextCommands =
         | AddCounterReference of Guid
         | RemoveCounterReference of Guid
             interface Command<CounterContext, CounterCountextEvents> with
-                member this.Execute (counter: CounterContext):  Result<List<CounterCountextEvents>, string> =
+                member this.Execute (counter: CounterContext) =
                     match this with
                     | AddCounterReference id ->
                         counter.AddCounter id
-                        |> Result.map (fun _ -> [CounterAdded id])
+                        |> Result.map (fun s -> (s, [CounterAdded id]))
                     | RemoveCounterReference id ->
                         counter.RemoveCounter id
-                        |> Result.map (fun _ -> [CounterRemoved id])
+                        |> Result.map (fun s -> (s,[CounterRemoved id]))
                 member this.Undoer = None

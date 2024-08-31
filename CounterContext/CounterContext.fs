@@ -1,5 +1,6 @@
 ﻿
 namespace SharpinoCounter
+open SharpinoCounter.Commons
 open System
 open Sharpino
 open FSharpPlus
@@ -9,7 +10,6 @@ open Sharpino.Utils
 
 module CounterContext =
     type CounterContext(state: int, counterRefs: List<Guid>) =
-        let stateId = Guid.NewGuid ()
 
         member this.CountersReferences = counterRefs
 
@@ -32,14 +32,13 @@ module CounterContext =
         member this.State = state
 
 // -------
-        member this.StateId = stateId
         static member Zero = CounterContext (0, []) 
         static member StorageName = "_countercontext"
         static member Version = "_01"
         static member SnapshotsInterval = 15
         static member Lock = new Object ()
-        static member Deserialize (serializer: ISerializer, json: Json) =
-            serializer.Deserialize<CounterContext> json 
+        static member Deserialize (json: Json) =
+            globalSerializer.Deserialize<CounterContext> json
 
-        member this.Serialize (serializer: ISerializer) =
-            serializer.Serialize(this)
+        member this.Serialize =
+            globalSerializer.Serialize this

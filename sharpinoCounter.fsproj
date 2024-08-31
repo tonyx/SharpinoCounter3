@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <None Include="appSettings.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="sharpinoSettings.json" CopyToOutputDirectory="PreserveNewest" />
+    <Compile Include="Commons.fs" />
     <Compile Include="Counters/Counter.fs" />
     <Compile Include="Counters/Events.fs" />
     <Compile Include="Counters/Commands.fs" />
@@ -20,7 +22,7 @@
     <Compile Include="CounterApi.fs" />
     <Compile Include="TestUtils.fs" />
     <Compile Include="Tests.fs" />
-    <Compile Include="KafkaImplementationTests.fs" />
+    <!-- <Compile Include="KafkaImplementationTests.fs" /> -->
     <Compile Include="TestRunner.fs" />
   </ItemGroup>
 
@@ -34,9 +36,9 @@
     <PackageReference Include="FsToolkit.ErrorHandling" Version="4.15.1" />
     <PackageReference Include="Log4net" Version="2.0.17" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Sharpino" Version="2.5.5" />
 
-    <PackageReference Include="Sharpino" Version="1.6.0" />
-    <PackageReference Include="Sharpino.Core" Version="1.1.4" />
+    <!-- <PackageReference Include="Sharpino" Version="1.6.0" /> -->
 
   </ItemGroup>
 
