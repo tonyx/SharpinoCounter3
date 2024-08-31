@@ -45,24 +45,25 @@ let counterContextMemoryStateViewer =
 
 let counterAggregateMemoryStateViewer =
     getAggregateStorageFreshStateViewer<Counter, CounterEvents> inMemoryEventStore
-let counterSubscriber = 
-    let result =
-        try
-            KafkaSubscriber.Create("localhost:9092", CounterContext.Version, CounterContext.StorageName, "sharpinoClient") |> Result.get
-        with e ->
-            failwith (sprintf "KafkaSubscriber.Create failed %A" e)
-    result
+
+// let counterSubscriber = 
+//     let result =
+//         try
+//             KafkaSubscriber.Create("localhost:9092", CounterContext.Version, CounterContext.StorageName, "sharpinoClient") |> Result.get
+//         with e ->
+//             failwith (sprintf "KafkaSubscriber.Create failed %A" e)
+//     result
 
 // will remove this
-let getKafkaCounterContextState () =
-    let counterViewer = 
-        mkKafkaViewer<CounterContext, CounterCountextEvents> counterSubscriber counterContextStorageStateViewer (ApplicationInstance.ApplicationInstance.Instance.GetGuid())
+// let getKafkaCounterContextState () =
+//     let counterViewer = 
+//         mkKafkaViewer<CounterContext, CounterCountextEvents> counterSubscriber counterContextStorageStateViewer (ApplicationInstance.ApplicationInstance.Instance.GetGuid())
 
-    let counterState = 
-        fun () ->
-            counterViewer.RefreshLoop() |> ignore
-            counterViewer.State()
-    counterState
+//     let counterState = 
+//         fun () ->
+//             counterViewer.RefreshLoop() |> ignore
+//             counterViewer.State()
+//     counterState
 
 let Setup(eventStore: IEventStore) =
     StateCache<CounterContext>.Instance.Clear()
