@@ -51,7 +51,6 @@ module SharpinoCounterApi =
                     |> this.RunCounterContextCommand
             }
 
-
         member private this.RunInitAndCommand counter cmd =
             cmd
             |> runInitAndCommand<CounterContext, CounterCountextEvents, Counter> storage eventBroker counterContextStateViewer counter
