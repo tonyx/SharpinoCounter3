@@ -28,12 +28,10 @@
 
   <ItemGroup>
     <PackageReference Include="Sharpino" Version="2.5.5" />
-
   </ItemGroup>
 
   <!-- <ItemGroup>
     <ProjectReference Include="..\..\realsharpino\Sharpino\Sharpino.Lib\Sharpino.Lib.fsproj" />
-    <ProjectReference Include="..\..\realsharpino\Sharpino\Sharpino.Lib.Core\Sharpino.Lib.Core.fsproj" />
   </ItemGroup> -->
 
 </Project>

@@ -53,7 +53,5 @@ module Counter =
             member this.Serialize  =
                 this.Serialize 
 
-        interface Entity with
-            member this.Id = this.Id
 
 
