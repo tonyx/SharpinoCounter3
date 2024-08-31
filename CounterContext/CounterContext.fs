@@ -42,7 +42,6 @@ module CounterContext =
         static member StorageName = "_countercontext"
         static member Version = "_01"
         static member SnapshotsInterval = 15
-        static member Lock = new Object ()
         static member Deserialize (json: Json) =
             globalSerializer.Deserialize<CounterContext> json
 
