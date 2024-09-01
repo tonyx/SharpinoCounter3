@@ -1,10 +1,10 @@
 # Sharpino Counter
 
-Example of a Counter with Sharpino, with Kafka.
+Example of a Counter with Sharpino
 
 ## Table of Contents
 
-Prerequisites: dbmate, postgres, Apache Kafka
+Prerequisites: dbmate, postgres (optional as can use in memory eventstore)
 
 - [Installation](#installation)
 - [Optional Postgres EvenStore](#postgesEventStore)
