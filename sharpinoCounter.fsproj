@@ -18,6 +18,7 @@
     <Compile Include="CounterContext/CounterContext.fs" />
     <Compile Include="CounterContext/Events.fs" />
     <Compile Include="CounterContext/Commands.fs" />
+    <Compile Include="Accounts/Account.fs" />
 
     <Compile Include="CounterApi.fs" />
     <Compile Include="TestUtils.fs" />

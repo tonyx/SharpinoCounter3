@@ -15,11 +15,16 @@ module CounterContextEvents =
     type CounterCountextEvents =
         | CounterAdded of Guid
         | CounterRemoved of Guid
+        | AccountAdded of Guid
+        | AccountRemoved of Guid
+
             interface Event<CounterContext> with
                 member this.Process (counter: CounterContext) =
                     match this with
                     | CounterAdded id -> counter.AddCounterReference id
                     | CounterRemoved id -> counter.RemoveCounterReference id
+                    | AccountAdded id -> counter.AddAccountReference id
+                    | AccountRemoved id -> counter.RemoveAccountReference id
 
 // ---
         static member Deserialize (json: Json) =

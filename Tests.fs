@@ -15,7 +15,7 @@ let tests =
     // make sure you properly setup postgres db using dbmate tool if you want to enable the first test line below
     let testConfigs = [
         // ((fun () -> SharpinoCounterApi (pgStorage, doNothingBroker, counterContextStorageStateViewer, counterAggregateStorageStateViewer)), pgStorage)
-        ((fun () -> SharpinoCounterApi (inMemoryEventStore, doNothingBroker, counterContextMemoryStateViewer, counterAggregateMemoryStateViewer)), inMemoryEventStore)
+        ((fun () -> SharpinoCounterApi (inMemoryEventStore, doNothingBroker, counterContextMemoryStateViewer, counterAggregateMemoryStateViewer, accountAggregateMemoryStateViewer)), inMemoryEventStore)
     ]
 
     testList "samples" [

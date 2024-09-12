@@ -10,8 +10,9 @@ open SharpinoCounter.CounterContextCommands
 open SharpinoCounter.Counter
 
 module SharpinoCounterApi =
+    open Sharpino.DoubleAccountDemo.Account
 
-    type SharpinoCounterApi (storage: IEventStore<string>, eventBroker: IEventBroker<string>, counterContextStateViewer: StateViewer<CounterContext>, counterViewer: AggregateViewer<Counter>) =
+    type SharpinoCounterApi (storage: IEventStore<string>, eventBroker: IEventBroker<string>, counterContextStateViewer: StateViewer<CounterContext>, counterViewer: AggregateViewer<Counter>, accountViewer: AggregateViewer<Account>) =
 
         member this.AddCounter counterId =
             let counter = Counter (counterId, 0)
@@ -20,6 +21,22 @@ module SharpinoCounterApi =
                     AddCounterReference counterId
                     |> this.RunInitAndCommand counter 
             }
+
+        member this.AddAccount (account: Account) =
+            result {
+                return! 
+                    AddAccountReference account.Id
+                    |> runInitAndCommand storage eventBroker account
+            }
+
+        member this.TransferAmountFromAccountToAccount (amount: decimal, fromAccount: Account, toAccount: Account) =
+            result {
+                let fromAccountCommand = Accountcommands.TransferFrom (fromAccount.Id, amount)
+                let toAccountCommand = Accountcommands.TransferTo (toAccount.Id, amount)
+                return!
+                    runTwoAggregateCommands<Account, AccountEvents, Account, AccountEvents, string> fromAccount.Id toAccount.Id storage eventBroker fromAccountCommand toAccountCommand
+            }
+
 
         member this.GetCounter counterId =
             result {

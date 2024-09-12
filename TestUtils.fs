@@ -18,6 +18,7 @@ open Sharpino.CommandHandler
 open SharpinoCounter.CounterContextEvents
 open Sharpino.KafkaReceiver
 open SharpinoCounter.Counter
+open Sharpino.DoubleAccountDemo.Account
 
 let connection = 
     "Server=127.0.0.1;"+
@@ -45,6 +46,9 @@ let counterContextMemoryStateViewer =
 
 let counterAggregateMemoryStateViewer =
     getAggregateStorageFreshStateViewer<Counter, CounterEvents, string> inMemoryEventStore
+
+let accountAggregateMemoryStateViewer =
+    getAggregateStorageFreshStateViewer<Account, AccountEvents, string> inMemoryEventStore
 
 
 // let counterSubscriber = 
