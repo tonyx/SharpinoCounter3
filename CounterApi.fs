@@ -40,14 +40,14 @@ module SharpinoCounterApi =
                 return account
             }
 
-        member this.TransferAmountFromAccountToAccount (amount: decimal, fromAccountId: Guid, toAccountId: Guid) =
+        member this.TransferAmount (amount: decimal, toAccount: Guid, fromAccount: Guid) =
             result {
-                let! accountFrom = this.GetAccount fromAccountId
-                let! accountTo = this.GetAccount toAccountId
-                let fromAccountCommand = Accountcommands.TransferFrom (fromAccountId, amount)
-                let toAccountCommand = Accountcommands.TransferTo (toAccountId, amount)
+                let! accountFrom = this.GetAccount toAccount
+                let! accountTo = this.GetAccount fromAccount
+                let toAccountCommand = Accountcommands.TransferFrom (fromAccount, amount)
+                let fromAccountCommand = Accountcommands.TransferTo (toAccount, amount)
                 return!
-                    runTwoAggregateCommands<Account, AccountEvents, Account, AccountEvents, string> fromAccountId toAccountId storage eventBroker fromAccountCommand toAccountCommand
+                    runTwoAggregateCommands<Account, AccountEvents, Account, AccountEvents, string> toAccount fromAccount storage eventBroker toAccountCommand fromAccountCommand
             }
 
         member this.GetCounter counterId =

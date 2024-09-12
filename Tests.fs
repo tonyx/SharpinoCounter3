@@ -58,26 +58,26 @@ let tests =
             let account2Added = accountApi.AddAccount account2
 
             // when
-            let transferAmount = accountApi.TransferAmountFromAccountToAccount (100.0M, account1.Id, account2.Id)
+            let transferAmount = accountApi.TransferAmount (100.0M, account1.Id, account2.Id)
 
             // then
             Expect.isOk transferAmount "should be ok"
 
         multipleTestCase "add two account, do a transfer and check the balance - Ok" testConfigs <| fun (api, eventStore) ->
             Setup eventStore
-            let account1: Account = { Id = Guid.NewGuid (); Name = "test"; Balance = 0.0M }
-            let account2: Account = { Id = Guid.NewGuid (); Name = "test"; Balance = 1000.0M }
+            let accountTo: Account = { Id = Guid.NewGuid (); Name = "test"; Balance = 0.0M }
+            let accountFrom: Account = { Id = Guid.NewGuid (); Name = "test"; Balance = 1000.0M }
             let accountApi = api ()
 
-            let account1Added = accountApi.AddAccount account1
-            let account2Added = accountApi.AddAccount account2
+            let account1Added = accountApi.AddAccount accountTo
+            let account2Added = accountApi.AddAccount accountFrom
 
             // when 
-            let transferAmount = accountApi.TransferAmountFromAccountToAccount (100.0M, account1.Id, account2.Id)
+            let transferAmount = accountApi.TransferAmount (100.0M, accountTo.Id, accountFrom.Id)
 
             // then
-            let account1Retrieved = accountApi.GetAccount account1.Id |> Result.get
-            let account2Retrieved = accountApi.GetAccount account2.Id |> Result.get
+            let account1Retrieved = accountApi.GetAccount accountTo.Id |> Result.get
+            let account2Retrieved = accountApi.GetAccount accountFrom.Id |> Result.get
 
             Expect.equal account1Retrieved.Balance 100.0M "should be 100"
             Expect.equal account2Retrieved.Balance 900.0M "should be 900"
