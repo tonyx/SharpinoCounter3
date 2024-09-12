@@ -6,6 +6,7 @@ open FSharpPlus
 open FsToolkit.ErrorHandling
 open Expecto
 open SharpinoCounter.SharpinoCounterApi
+open Sharpino.DoubleAccountDemo.Account
 open Sharpino.TestUtils
 open TestUtils
 
@@ -19,6 +20,69 @@ let tests =
     ]
 
     testList "samples" [
+
+        multipleTestCase "add an account - Ok" testConfigs <| fun (api, eventStore) ->
+            Setup eventStore
+            // given
+            let account: Account = { Id = Guid.NewGuid (); Name = "test"; Balance = 0.0M }
+            let accountApi = api ()
+
+            // when
+            let accountAdded = accountApi.AddAccount account
+
+            // then
+            Expect.isOk accountAdded "should be ok"
+
+        multipleTestCase "add and retrieve an account - Ok" testConfigs <| fun (api, eventStore) ->
+            Setup eventStore
+            // given
+            let account: Account = { Id = Guid.NewGuid (); Name = "test"; Balance = 0.0M }
+            let accountApi = api ()
+
+            // when
+            let accountAdded = accountApi.AddAccount account
+            let accountRetrieved = accountApi.GetAccount account.Id
+
+            // then
+            Expect.isOk accountRetrieved "should be ok"
+
+        multipleTestCase "add two account and do a transfer - Ok" testConfigs <| fun (api, eventStore) ->
+            Setup eventStore
+
+            // given
+            let account1: Account = { Id = Guid.NewGuid (); Name = "test"; Balance = 0.0M }
+            let account2: Account = { Id = Guid.NewGuid (); Name = "test"; Balance = 1000.0M }
+            let accountApi = api ()
+
+            let account1Added = accountApi.AddAccount account1
+            let account2Added = accountApi.AddAccount account2
+
+            // when
+            let transferAmount = accountApi.TransferAmountFromAccountToAccount (100.0M, account1.Id, account2.Id)
+
+            // then
+            Expect.isOk transferAmount "should be ok"
+
+        multipleTestCase "add two account, do a transfer and check the balance - Ok" testConfigs <| fun (api, eventStore) ->
+            Setup eventStore
+            let account1: Account = { Id = Guid.NewGuid (); Name = "test"; Balance = 0.0M }
+            let account2: Account = { Id = Guid.NewGuid (); Name = "test"; Balance = 1000.0M }
+            let accountApi = api ()
+
+            let account1Added = accountApi.AddAccount account1
+            let account2Added = accountApi.AddAccount account2
+
+            // when 
+            let transferAmount = accountApi.TransferAmountFromAccountToAccount (100.0M, account1.Id, account2.Id)
+
+            // then
+            let account1Retrieved = accountApi.GetAccount account1.Id |> Result.get
+            let account2Retrieved = accountApi.GetAccount account2.Id |> Result.get
+
+            Expect.equal account1Retrieved.Balance 100.0M "should be 100"
+            Expect.equal account2Retrieved.Balance 900.0M "should be 900"
+
+
         multipleTestCase "add a counter reference  - Ok" testConfigs <| fun (api, eventStore) ->
             Setup eventStore
             // given

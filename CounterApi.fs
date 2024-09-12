@@ -2,8 +2,10 @@ namespace SharpinoCounter
 open FsToolkit.ErrorHandling
 open Sharpino.CommandHandler
 
+open System
 open Sharpino.Storage
 open Sharpino.Core
+open Sharpino
 open SharpinoCounter.CounterContext
 open SharpinoCounter.CounterContextEvents
 open SharpinoCounter.CounterContextCommands
@@ -29,14 +31,24 @@ module SharpinoCounterApi =
                     |> runInitAndCommand storage eventBroker account
             }
 
-        member this.TransferAmountFromAccountToAccount (amount: decimal, fromAccount: Account, toAccount: Account) =
+        member this.GetAccount (accountId: Guid) =
             result {
-                let fromAccountCommand = Accountcommands.TransferFrom (fromAccount.Id, amount)
-                let toAccountCommand = Accountcommands.TransferTo (toAccount.Id, amount)
-                return!
-                    runTwoAggregateCommands<Account, AccountEvents, Account, AccountEvents, string> fromAccount.Id toAccount.Id storage eventBroker fromAccountCommand toAccountCommand
+                let! (_, counterContext) = counterContextStateViewer ()
+                let! counterExists = 
+                    counterContext.GetAccountReference accountId
+                let! (_, account) = accountViewer accountId
+                return account
             }
 
+        member this.TransferAmountFromAccountToAccount (amount: decimal, fromAccountId: Guid, toAccountId: Guid) =
+            result {
+                let! accountFrom = this.GetAccount fromAccountId
+                let! accountTo = this.GetAccount toAccountId
+                let fromAccountCommand = Accountcommands.TransferFrom (fromAccountId, amount)
+                let toAccountCommand = Accountcommands.TransferTo (toAccountId, amount)
+                return!
+                    runTwoAggregateCommands<Account, AccountEvents, Account, AccountEvents, string> fromAccountId toAccountId storage eventBroker fromAccountCommand toAccountCommand
+            }
 
         member this.GetCounter counterId =
             result {
